@@ -1,0 +1,33 @@
+[{
+        "Name": "lovedeep singh kamal",
+        "Regno": "20198042",
+        "Branch": "information technology",
+        "Gender": "m",
+        "email": "developer.lovedeep@gmail.com",
+        "mobile": "6395285014"
+    },
+    {
+        "Name": "SANYAM JAIN",
+        "Regno": "20192028",
+        "Branch": "Electrical Engineering",
+        "Gender": "m",
+        "email": "sanyam@gmail.com",
+        "mobile": "8989234532"
+    },
+    {
+        "Name": "PANKAJ KUMAR",
+        "Regno": "20196016",
+        "Branch": "Production and Industrial Engg",
+        "Gender": "m",
+        "email": "pankaj@gmail.com",
+        "mobile": "1234567890"
+    },
+    {
+        "Name": "ALOK KUMAR SINGH",
+        "Regno": "20195062",
+        "Branch": "Electronics and Communication Engineering",
+        "Gender": "m",
+        "email": "aks@gmail.com",
+        "mobile": "5555555555"
+    }
+]
