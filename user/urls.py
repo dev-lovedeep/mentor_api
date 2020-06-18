@@ -6,5 +6,7 @@ urlpatterns = [
     path('signup/',signup_view,name = "signup"),
     path('login/',login_view,name = "login"),
     path('activate/<uidb64>/<token>/', onboarding, name="activate"),
+   
+
     # path('onboard/<str:regno>',onboarding,name = "onboard"),
 ]

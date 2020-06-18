@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>this is home page</h1>
+    <h3>find a mentor</h3>
+    <form action="." method="get" id="filter">
+        <label for="query">search:</label>
+        <input type="search" name="query" id="" placeholder="enter name or regno.">
+        <br>
+        <label for="branch">branch</label>
+        <select name="branch" id="">
+            <option value="all">all</option>
+            <option value="cse">cse</option>
+            <option value="it">it</option>
+            <option value="ece">ece</option>
+            <option value="ee">ee</option>
+            <option value="me">me</option>
+            <option value="pie">pie</option>
+            <option value="bt">bt</option>
+        </select>
+        <br>
+        <label for="tag">tags:</label>
+        <select id="tag" class="form-control" name="tag">
+            <option selected>all</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <input type="submit" value="search">
+    </form>
+
+    <div>
+        {% for object in queryset %}
+        <div style="display:flex; width: 50%;justify-content: space-between;">
+            <p>{{object.user.username}}</p>
+            <p>{{object.full_name}}</p>
+            <p>{{object.branch}}</p>
+            <p>{{object.mob}}</p>
+
+            <p>{{object.tag}}</p>
+        </div>
+        {%endfor%}
+    </div>
+</body>
+
+
+</html>
