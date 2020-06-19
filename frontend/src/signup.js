@@ -15,7 +15,7 @@ class Signup extends Component {
                     <div className='login-form'>
                         <h1>SIGNUP</h1>
                         <form>
-                            <input type='text' placeholder='Enter Registration No.' /><br/>
+                            <input className='field-input' type='text' placeholder='Enter Registration No.' /><br/>
                             <div className='btn-outline' style={{marginTop:'3em', marginBottom:'2em'}}><button className='login-btn'>SIGNUP</button></div>
                         </form>
                         <h2 style={{marginTop:'3em'}}><a href='#'>LOGIN </a>HERE</h2>

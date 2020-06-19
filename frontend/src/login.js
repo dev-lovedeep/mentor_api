@@ -17,8 +17,8 @@ class Login extends Component {
                     <div className='login-form'>
                         <h1>LOGIN</h1>
                         <form>
-                            <input type='text' placeholder='Enter Registration No.' /><br/>
-                            <input type='password' placeholder='Password' />
+                            <input className='field-input' type='text' placeholder='Enter Registration No.' /><br/>
+                            <input className='field-input' type='password' placeholder='Password' />
                             <div className='btn-outline'><button className='login-btn'>LOGIN</button></div>
                         </form>
                         <p style={{fontWeight:'600', marginBottom:'3em'}}>forgot password? <span><a href='#'>Click here!!</a></span></p>
