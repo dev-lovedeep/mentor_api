@@ -58,7 +58,14 @@
   margin: 0.5em;
   width: 13em;
 }
-.login-grid-item{
+.login-grid-item1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 0.5em;
+}
+.login-grid-item2{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,12 +73,14 @@
   margin-top: 0.5em;
 }
 .login-form{
-  width: 60%;
+  width: 80%;
+  min-width: 360px;
+  max-width: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 5em;
+  margin-top: 4.5em;
   box-shadow: -5px -5px 15px #FFFFFFCB, 5px 5px 15px #ccc;
   border-radius: 1em;
 }
@@ -80,8 +89,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 2em;
-  width: 60%;
+  margin-bottom: 1.5em;
+  width: 70%;
 }
 .login-form form input{
   width: 100%;
@@ -89,8 +98,8 @@
   background: #EAEBF3;
   margin: 0.5em;
   margin-bottom: 2em;
-  padding: 0.5em;
-  font-size: 0.9rem;
+  padding: 0.4em;
+  font-size: 1rem;
   padding-left: 1em;
   font-weight: 500;
   color: #000;
@@ -100,7 +109,7 @@
 }
 .login-form h1{
   font-size: 4.2rem;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.2em;
 }
 .login-btn{
   width: 80%;
@@ -129,4 +138,69 @@
   margin: 0.5em;
   margin-left: 11em;
   margin-top: 5em;
+}
+.email-verify{
+  margin: 1.8em 0;
+  font-weight: 600;
+  color: #00A659;
+}
+@media only screen and (max-width: 1320px) {
+  body,html {
+    font-size: 13px;
+  }
+}
+
+@media only screen and (max-width: 1580px) {
+  body,html {
+    font-size: 14px;
+  }
+  .login-form{
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 1140px) {
+  body,html {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 1020px) {
+  body,html {
+    font-size: 11px;
+  }
+  .login-form{
+    width: 80%;
+  }
+
+  @media only screen and (max-width: 980px) {
+    body,html {
+      font-size: 14px;
+    }
+    .login-grid-item1{
+      display: none;
+    }
+    .login-grid-container{
+      grid-template-columns: auto;
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .app-header{
+    font-size: 1.6em;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .login-form{
+    box-shadow: none;
+    width: 100%;
+  }
+  .login-form form{
+    width: 80%;
+  }
+  .btn-outline{
+    margin-top: 2em;
+  }
 }

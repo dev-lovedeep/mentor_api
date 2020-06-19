@@ -6,7 +6,7 @@ class Signup extends Component {
         return(
             <div className='login-grid-container'>
                 <div className='login-grid-item'>
-                    <h1 style={{fontSize:'4.2rem', marginBottom:'0.2em'}}>WELCOME <br /> TO MNNIT COMMUNITY</h1>
+                    <h1 style={{fontSize:'4.2rem', marginLeft:'2.3em' ,marginBottom:'0.2em'}}>WELCOME <br /> TO MNNIT COMMUNITY</h1>
                     <div className='signup-doodles'>
                         <img style={{width:'30em', float:'left'}} src='/images/signup.png' />
                     </div>
