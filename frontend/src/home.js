@@ -5,7 +5,7 @@ class Home extends Component {
     render(){
         return(
             <div className='grid-container'>
-                <p>This is a login page</p>
+                <p>This is a home page</p>
             </div>
         )
     }

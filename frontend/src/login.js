@@ -22,7 +22,7 @@ class Login extends Component {
                             <div className='btn-outline'><button className='login-btn'>LOGIN</button></div>
                         </form>
                         <p style={{fontWeight:'600', marginBottom:'3em'}}>forgot password? <span><a href='#'>Click here!!</a></span></p>
-                        <h2><a href='#'>SIGNUP </a>HERE</h2>
+                        <h2><a href='/signup'>SIGNUP </a>HERE</h2>
                     </div>
                 </div>
             </div>
