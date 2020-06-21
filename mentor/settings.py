@@ -28,6 +28,16 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,8 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # added
     'rest_framework',
+    'rest_framework.authtoken',
     'six',
-    'user',
+    # 'user',
+    'api',
 ]
 
 MIDDLEWARE = [

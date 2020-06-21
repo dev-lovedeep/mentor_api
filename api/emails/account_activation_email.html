@@ -3,5 +3,5 @@ Hi {{ user.get_short_name }},
 
 Please click on the link below to confirm your registration:
 
-http://{{ domain }}{% url 'user:activate' uidb64=uid token=token %}
+http://{{ domain }}{% url 'api:api_verify_token' uidb64=uid token=token %}
 {% endautoescape %}

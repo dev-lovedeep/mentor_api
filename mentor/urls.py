@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from user.views import home_view,api_filter_view,api_detail_view
+# from user.views import home_view,api_filter_view,api_detail_view
 app_name = "mentor"
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/',include('user.urls')),
-    path('',home_view,name="home"),
-    path('api/',api_filter_view.as_view(),name="api"), 
-    path('api/<str:regno>',api_detail_view,name="detail"), 
+    # path('user/',include('user.urls')),
+    path('api/',include('api.urls',namespace="api")),
+    # path('',home_view,name="home"),
+    # path('api/',api_filter_view.as_view(),name="api"), 
+    # path('api/<str:regno>',api_detail_view,name="detail"), 
 ]
