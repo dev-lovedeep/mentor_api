@@ -3,5 +3,5 @@ Hi {{ user.get_short_name }},
 
 Please click on the link below to confirm your registration:
 
-http://{{ domain }}{% url 'api:api_verify_token' uidb64=uid token=token %}
+http://localhost:3000{% url 'api:api_verify_token' uidb64=uid token=token %}
 {% endautoescape %}
