@@ -1,6 +1,6 @@
 from rest_framework import status,generics
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,APIView
+from rest_framework.decorators import api_view,APIView,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .serializers import send_mail_serializer
 from django.contrib.auth.models import User
@@ -53,7 +53,7 @@ def api_signup_view(request,regno):
 
 # api 
 # call:http://localhost:8000/api/verify/<uid>/<token>/
-# return:{"success":"true","student":student deatials} if email_verification_token is valid
+# return:{"success":"true","student":student deatials,"token":token} if email_verification_token is valid
 #         {"success":"false"} if token is invalid 
 def api_verify_token(request, uidb64, token):
     try:
@@ -65,27 +65,29 @@ def api_verify_token(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
             student= UserProfile.objects.get(user=user)
             serializer = UserProfileSerializer(student,many=False)
-            return JsonResponse({"success":'true',"student":serializer.data})
+            token = Token.objects.get(user=user).key
+            return JsonResponse({"success":'true',"student":serializer.data,"token":token})
     return JsonResponse({"success":'false'})
 
 
 # api 
 # call:[post only] http://localhost:8000/api/onboard/
-# body of api call:[mob,password,password2,regno]
-# return:{"success":"true","username":regno,"token":token}
+# body of api call:[mob,password,password2,regno] [auth token required]
+# return:{"success":"true","username":regno}
 #         {errors} if any problem with the form
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_onboarding(request):
-    serializer = UserOnboardingSerializer(data=request.data)
+    serializer = UserOnboardingSerializer(data=request.data,context={'request': request})
     data={}
     if serializer.is_valid():
         user = serializer.save()
         user.is_active = True
         user.save()
-        token = Token.objects.get(user=user).key
+        # token = Token.objects.get(user=user).key
         data['success'] = "true"
         data['username'] = user.username
-        data['token'] = token
+        # data['token'] = token
     else:
         data = serializer.errors
     return JsonResponse(data)
@@ -118,6 +120,7 @@ def filter(request):
     if is_valid_queryparam(tag_query) and tag_query!="all":
         qs = qs.filter(tags__tagname = tag_query)
 
+    print(qs[0].full_name)
     return qs
 
 
@@ -145,12 +148,22 @@ class api_filter_view(generics.ListAPIView):
         return filter(self.request)
 
     serializer_class = UserProfileSerializer
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            "name": "love"
+            # extra data
+        })
+        return context
 
     # def list(self, request, *args, **kwargs):
+    #     qs = self.get_queryset()
     #     response = super().list(request, args, kwargs)
-    #     # Add data to response.data Example for your object:
-    #     response.data['name'] =  # Or wherever you get this values from
-    #     return response
+    #     serializer = self.get_serializer(instance = qs, many=True)
+
+    #     serializer_data = serializer.data # get the default serialized data 
+    #     serializer_data.append({"DISCOUNT": 210})
+    #     return Response(serializer_data)
 
 
 
