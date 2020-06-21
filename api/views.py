@@ -118,6 +118,7 @@ def filter(request):
     if is_valid_queryparam(tag_query) and tag_query!="all":
         qs = qs.filter(tags__tagname = tag_query)
 
+    print(qs[0].full_name)
     return qs
 
 
@@ -145,12 +146,22 @@ class api_filter_view(generics.ListAPIView):
         return filter(self.request)
 
     serializer_class = UserProfileSerializer
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({
+            "name": "love"
+            # extra data
+        })
+        return context
 
-    # def list(self, request, *args, **kwargs):
-    #     response = super().list(request, args, kwargs)
-    #     # Add data to response.data Example for your object:
-    #     response.data['name'] =  # Or wherever you get this values from
-    #     return response
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        response = super().list(request, args, kwargs)
+        serializer = self.get_serializer(instance = qs, many=True)
+
+        serializer_data = serializer.data # get the default serialized data 
+        serializer_data.append({"DISCOUNT": 210})
+        return Response(serializer_data)
 
 
 
