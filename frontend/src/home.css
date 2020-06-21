@@ -1,0 +1,49 @@
+.home-grid-container{
+    display: grid;
+    grid-template-columns: 35% 65%;
+}
+
+.home-grid-item{
+    display: flex;
+}
+
+.pal-search-form{
+    box-shadow: -5px -5px 15px #FFFFFFCB, 5px 5px 15px #ccc;
+    border-radius: 1em;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5em 0.8em 1em 0;
+}
+
+.pal-search-list{
+    box-shadow: -5px -5px 15px #FFFFFFCB, 5px 5px 15px #ccc;
+    border-radius: 1em;
+    width: 90%;
+    margin:  5em 0em 1em 0.8em;
+}
+
+.search-form{
+    width: 60%;
+    margin: 6.8em 0
+}
+
+.search-form label{
+    font-weight: 700;
+    padding-left: 1em;
+}
+
+.search-form input{
+    margin-top: 1em;
+    padding-left: 2em;
+    font-weight: 500;
+}
+
+.search-form select{
+    margin-top: 1em;
+    padding-left: 2em;
+    font-weight: 500;
+    font-size: 1.2rem;
+    width: 109%;
+}

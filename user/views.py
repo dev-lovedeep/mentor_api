@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
+from django.http import JsonResponse
 from .forms import user_onboarding_form
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -13,6 +14,8 @@ from .models import UserProfile,Tags
 from django.db.models import Q
 from django.db.models.functions import Concat
 from django.db.models import Value
+from .serializers import UserProfileSerializer
+from rest_framework import generics
 # Create your views here.
 
 
@@ -138,3 +141,39 @@ def home_view(request):
         'categories': Tags.objects.all()
     }
     return render(request, "user/templates/home.html", context)
+
+#this is the function implementation of api filter view
+# def api_filter_view(request):
+#     if request.method=="GET":
+#         queryset = filter(request)
+#         # queryset = UserProfile.objects.all()
+#         print(queryset)
+#         serializer = UserProfileSerializer(queryset, many=True)
+#         print(serializer,serializer.data)
+#         return JsonResponse(serializer.data,safe = False)
+
+#this is class implementation view of same function above
+
+
+# example request for this api call
+# http://localhost:8000/api/?tag=django&query=san&brach=ee
+class api_filter_view(generics.ListAPIView):
+    def get_queryset(self):
+        return filter(self.request)
+    serializer_class = UserProfileSerializer
+
+# example request for this api call
+# http://localhost:8000/api/20198042
+def api_detail_view(request,regno):
+    try:
+        user = User.objects.get(username = regno)
+    except User.DoesNotExist:
+        return HttpResponse(status=404)
+    
+    student = UserProfile.objects.get(user=user)
+
+    if request.method == 'GET':
+        serializer = UserProfileSerializer(student,many=False)
+        print(serializer)
+        return JsonResponse(serializer.data)
+
