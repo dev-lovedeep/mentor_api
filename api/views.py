@@ -12,7 +12,7 @@ from api.emails.tokens import account_activation_token
 from django.utils.encoding import force_bytes,force_text
 from django.shortcuts import HttpResponse
 from .models import UserProfile
-from .serializers import UserProfileSerializer,UserOnboardingSerializer,NewUserSerializer
+from .serializers import UserProfileSerializer,UserOnboardingSerializer,NewUserSerializer,user_of_email_token
 from rest_framework.authtoken.models import Token
 from django.db.models import Q
 from django.db.models.functions import Concat
@@ -51,16 +51,16 @@ def api_signup_view(request,regno):
     return JsonResponse(response)
 
 
+
+
+
 # api : this api verify email token
 # call:http://localhost:8000/api/verify/<uid>/<token>/
 # return:{"success":"true","student":student deatials,"token":token} if email_verification_token is valid
 #         {"success":"false"} if token is invalid 
 def api_verify_token(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
+    # user_of_email_token is created by me imported from serializers
+    user = user_of_email_token(uidb64,token)
 
     if user is not None and account_activation_token.check_token(user, token):
             student= UserProfile.objects.get(user=user)
@@ -72,16 +72,19 @@ def api_verify_token(request, uidb64, token):
 
 # api 
 # call:[post only] http://localhost:8000/api/onboard/
-# body of api call:[mob,password,password2,regno] [auth token required]
+# body of api call:[mob,password,password2,regno,uidb64,email_token]
 # return:{"success":"true","username":regno}
 #         {errors} if any problem with the form
+        #  {"error":"bad request."} if the email token did not matched to the user
+#           {"error":"user already onboarded"} if api fired for already onboarded(active) user
+# @permission_classes([IsAuthenticated])
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def api_onboarding(request):
     serializer = UserOnboardingSerializer(data=request.data,context={'request': request})
     data={}
     if serializer.is_valid():
         user = serializer.save()
+        print(user)
         user.is_active = True
         user.save()
         # token = Token.objects.get(user=user).key
@@ -148,13 +151,9 @@ class api_filter_view(generics.ListAPIView):
         return filter(self.request)
 
     serializer_class = UserProfileSerializer
-    # def get_serializer_context(self):
-    #     context = super().get_serializer_context()
-    #     context.update({
-    #         "name": "love"
-    #         # extra data
-    #     })
-    #     return context
+    def get_serializer_context(self):
+        user = self.request.user
+        return user
 
     # def list(self, request, *args, **kwargs):
     #     qs = self.get_queryset()
@@ -212,14 +211,24 @@ def verify_cookie_token(request):
     user = request.user
     print(user)
     if user in User.objects.all():
-        return JsonResponse({"success":"true"})
+        return JsonResponse({"success":"true","user":user.username})
     # if auth token is wrong django rest automatically 
     # return{"detail": "Invalid token."}
 
+
+#api
+#only to upload a single user
+# call:[post] http://localhost:8000/api/new/
+#return:{"user":regno} if successful
+#{"error":"only admin can create new user"} if token is not of admin user
+# errors if any other problem occur
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_new_user(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"error":"only admin can create new user"})
     data = JSONParser().parse(request)
-    print(data)
+    
     serializer = NewUserSerializer(data=data)
     if serializer.is_valid():
         name = serializer.validated_data['name']
@@ -235,7 +244,7 @@ def api_new_user(request):
 
         UserProfile.objects.create(user = user,branch = branch,gender = gender,mob = mob)
         return JsonResponse({"user":regno},safe=False)
-    return JsonResponse("invalid serializer",safe=False)
+    return JsonResponse(serializer.errors)
         
 
 
