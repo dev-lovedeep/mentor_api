@@ -1,8 +1,8 @@
 from rest_framework import status,generics
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,APIView,permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .serializers import send_mail_serializer
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.sites.shortcuts import get_current_site
@@ -12,7 +12,7 @@ from api.emails.tokens import account_activation_token
 from django.utils.encoding import force_bytes,force_text
 from django.shortcuts import HttpResponse
 from .models import UserProfile
-from .serializers import UserProfileSerializer,UserOnboardingSerializer
+from .serializers import UserProfileSerializer,UserOnboardingSerializer,NewUserSerializer
 from rest_framework.authtoken.models import Token
 from django.db.models import Q
 from django.db.models.functions import Concat
@@ -51,7 +51,7 @@ def api_signup_view(request,regno):
     return JsonResponse(response)
 
 
-# api 
+# api : this api verify email token
 # call:http://localhost:8000/api/verify/<uid>/<token>/
 # return:{"success":"true","student":student deatials,"token":token} if email_verification_token is valid
 #         {"success":"false"} if token is invalid 
@@ -164,6 +164,45 @@ class api_filter_view(generics.ListAPIView):
     #     serializer_data = serializer.data # get the default serialized data 
     #     serializer_data.append({"DISCOUNT": 210})
     #     return Response(serializer_data)
+
+
+
+# api 
+# call:[post only] http://localhost:8000/api/cookie/
+# body of api call: [auth token required]
+# return:{"success":"true"}
+#         {"detail": "Invalid token."} if any problem with the token
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_cookie_token(request):
+    user = request.user
+    print(user)
+    if user in User.objects.all():
+        return JsonResponse({"success":"true"})
+    # if auth token is wrong django rest automatically 
+    # return{"detail": "Invalid token."}
+
+@api_view(['POST'])
+def api_new_user(request):
+    data = JSONParser().parse(request)
+    print(data)
+    serializer = NewUserSerializer(data=data)
+    if serializer.is_valid():
+        name = serializer.validated_data['name']
+        email = serializer.validated_data['email']
+        regno = serializer.validated_data['regno']
+        gender = serializer.validated_data['gender']
+        branch = serializer.validated_data['branch']
+        mob = serializer.validated_data['mob']
+        user = User.objects.create_user(regno, password=regno)
+        user.email = email
+        user.is_active = False
+        user.save()
+
+        UserProfile.objects.create(user = user,branch = branch,gender = gender,mob = mob)
+        return JsonResponse({"user":regno},safe=False)
+    return JsonResponse("invalid serializer",safe=False)
+        
 
 
 
