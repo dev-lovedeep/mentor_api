@@ -80,7 +80,7 @@ def api_verify_token(request, uidb64, token):
 # @permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def api_onboarding(request):
-    serializer = UserOnboardingSerializer(data=request.data,context={'request': request})
+    serializer = UserOnboardingSerializer(data=request.data)
     data={}
     if serializer.is_valid():
         user = serializer.save()
@@ -137,11 +137,13 @@ def filter(request):
 #         "branch": "branch",
 #         "gender": "m",
 #         "mob": mobile no.,
+#           "name":"full name",
 #         "profile_pic": "http://localhost:8000/media/profiles/default.png",
 #         "user": 20198042,
 #         "tags": [
 #             "django"
 #         ]
+
 #     }
 # ]
 class api_filter_view(generics.ListAPIView):
@@ -151,9 +153,7 @@ class api_filter_view(generics.ListAPIView):
         return filter(self.request)
 
     serializer_class = UserProfileSerializer
-    def get_serializer_context(self):
-        user = self.request.user
-        return user
+
 
     # def list(self, request, *args, **kwargs):
     #     qs = self.get_queryset()
@@ -175,6 +175,7 @@ class api_filter_view(generics.ListAPIView):
 #         "branch": "branch",
 #         "gender": "m",
 #         "mob": mobile no.,
+#           "name":"full name",
 #         "profile_pic": "http://localhost:8000/media/profiles/default.png",
 #         "user": 20198042,
 #         "tags": [

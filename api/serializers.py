@@ -48,7 +48,6 @@ class UserOnboardingSerializer(serializers.ModelSerializer):
         uidb64 = self.validated_data['uidb64']
         email_token = self.validated_data['email_token']
         email_token_user  = user_of_email_token(uidb64, email_token)
-        print(email_token_user)
         #if the user whose data is to be changed 
         # and the one who is trying to change(the token user)
         # is not same then return error msg
