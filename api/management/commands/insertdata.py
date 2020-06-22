@@ -19,9 +19,15 @@ class Command(BaseCommand):
             regno = student['Regno']
             name = student['Name']
             email = student['email']
-            user = User.objects.create_user(regno,email,regno)
+            # for splitting the name into first and last name
+            name_arr = name.split(" ", 1)
+            first = name_arr[0]
+            last = name_arr[1] if len(name_arr) > 1 else ""
+
+            user = User.objects.create_user(regno,email,regno,first_name = first,last_name = last)
             user.is_active = False
             user.save()
+
 
             UserProfile.objects.create(user = user,branch = branch,gender = gender,mob = mob)
             print("user",regno,"created successfully")

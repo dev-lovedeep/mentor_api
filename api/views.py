@@ -218,7 +218,16 @@ def verify_cookie_token(request):
 
 #api
 #only to upload a single user
-# call:[post] http://localhost:8000/api/new/
+# call:[post] http://localhost:8000/api/new/    [auth token of admin user only]
+#body of request:[json type data]
+# {
+#         "name": "name",
+#         "regno": "regno",
+#         "branch": "branch",
+#         "gender": "m",
+#         "email": "mailid",
+#         "mob": "mobno"
+#     }
 #return:{"user":regno} if successful
 #{"error":"only admin can create new user"} if token is not of admin user
 # errors if any other problem occur
@@ -227,6 +236,7 @@ def verify_cookie_token(request):
 def api_new_user(request):
     if not request.user.is_superuser:
         return JsonResponse({"error":"only admin can create new user"})
+    
     data = JSONParser().parse(request)
     
     serializer = NewUserSerializer(data=data)
@@ -237,8 +247,11 @@ def api_new_user(request):
         gender = serializer.validated_data['gender']
         branch = serializer.validated_data['branch']
         mob = serializer.validated_data['mob']
-        user = User.objects.create_user(regno, password=regno)
-        user.email = email
+        name_arr = name.split(" ", 1)
+        first = name_arr[0]
+        last = name_arr[1] if len(name_arr) > 1 else ""
+        user = User.objects.create_user(regno,email,regno,first_name = first,last_name = last)
+       
         user.is_active = False
         user.save()
 
