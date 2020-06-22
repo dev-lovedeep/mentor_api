@@ -148,13 +148,13 @@ class api_filter_view(generics.ListAPIView):
         return filter(self.request)
 
     serializer_class = UserProfileSerializer
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({
-            "name": "love"
-            # extra data
-        })
-        return context
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context.update({
+    #         "name": "love"
+    #         # extra data
+    #     })
+    #     return context
 
     # def list(self, request, *args, **kwargs):
     #     qs = self.get_queryset()
