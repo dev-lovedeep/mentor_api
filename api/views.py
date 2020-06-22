@@ -130,14 +130,14 @@ def filter(request):
 # return:
 # [
 #     {
-#         "id": 2,
+#         "id": id,
 #         "branch": "branch",
 #         "gender": "m",
 #         "mob": mobile no.,
 #         "profile_pic": "http://localhost:8000/media/profiles/default.png",
-#         "user": 5,
+#         "user": 20198042,
 #         "tags": [
-#             1
+#             "django"
 #         ]
 #     }
 # ]
@@ -166,6 +166,40 @@ class api_filter_view(generics.ListAPIView):
     #     return Response(serializer_data)
 
 
+# api 
+# call:[get only] http://localhost:8000/api/detail/<regno>/
+#[auth token required]
+# return:
+# [
+#     {
+#         "id": id,
+#         "branch": "branch",
+#         "gender": "m",
+#         "mob": mobile no.,
+#         "profile_pic": "http://localhost:8000/media/profiles/default.png",
+#         "user": 20198042,
+#         "tags": [
+#             "django"
+#         ]
+#     }
+# ]
+class api_detail_view(generics.RetrieveAPIView):
+    APIView=['GET',]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, regno):
+        try:
+            return User.objects.get(username = regno)
+        except User.DoesNotExist:
+            return None
+
+    def get(self, request, regno, format=None):
+        user = self.get_object(regno)
+        if not user:
+            return JsonResponse({"error":"no record found,please check regno again"})
+        snippet = UserProfile.objects.get(user= user)
+        serializer = UserProfileSerializer(snippet)
+        return Response(serializer.data)
 
 # api 
 # call:[post only] http://localhost:8000/api/cookie/
