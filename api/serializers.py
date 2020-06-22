@@ -7,8 +7,6 @@ class StringSerializer(serializers.StringRelatedField):
         return value
 
 
-class send_mail_serializer(serializers.Serializer):
-    regno = serializers.CharField(required = True,max_length = 8)
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
@@ -57,3 +55,11 @@ class UserOnboardingSerializer(serializers.ModelSerializer):
 
         return user 
         
+
+class NewUserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    email = serializers.EmailField()
+    regno = serializers.IntegerField()
+    class Meta:
+        model = UserProfile
+        fields = ['mob','branch','gender','name','email','regno']

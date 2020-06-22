@@ -28,6 +28,8 @@ class Home extends Component {
         else{
             this.setState({isLoggedIn: false})
         }
+
+        
     }
 
     handleChange = name => event => {
@@ -95,9 +97,6 @@ class Home extends Component {
                 </div>
                 <div className='home-grid-item'>
                     <div className='pal-search-list'>
-                      <p>{this.state.query}</p>
-                      <p>{this.state.branch}</p>
-                      <p>{this.state.tag}</p>
                     </div>
                 </div>
             </div>

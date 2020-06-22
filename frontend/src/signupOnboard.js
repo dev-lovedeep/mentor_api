@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {API} from './backend'
+import { Redirect } from 'react-router-dom';
 
 class SignupOnBoard extends Component {
 
@@ -14,7 +15,8 @@ class SignupOnBoard extends Component {
             branch: '',
             photo: null,
             error: '',
-            isVerified: true   //displaying error on fake user
+            isVerified: true,   //displaying error on fake user
+            performRedirect: false
         }
     }
 
@@ -27,8 +29,11 @@ class SignupOnBoard extends Component {
             return response.json()
         })
         .then(data => {
-            console.log(data)
-            this.setState({mobile: data.student.mob, branch: data.student.branch, regno: data.student.user, token: data.token})
+            if(data.success === 'false'){
+                this.setState({isVerified: false})
+            }else{
+                this.setState({mobile: data.student.mob, branch: data.student.branch, regno: data.student.user, token: data.token})  
+            }
         })
     }
 
@@ -39,18 +44,18 @@ class SignupOnBoard extends Component {
         }else{
             console.log(this.state)
             let form_data = new FormData();
-            form_data.append('profile_pic', this.state.photo, this.state.photo.name);
+            form_data.append('profile_pic', this.state.photo);
+            form_data.append('mob', this.state.mobile);
+            form_data.append('password', this.state.password1);
+            form_data.append('password2', this.state.password2);
+            form_data.append('regno', this.state.regno);
 
-            fetch(`${API}/onboard`, form_data, {
+            fetch(`${API}/onboard/`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
                     'Authorization': `Token ${this.state.token}`,
-                    'mob': this.state.mobile,
-                    'password': this.state.password1,
-                    'password2': this.state.password2,
-                    'regno': this.state.regno
-                }
+                },
+                body: form_data
             })
             .then(response => {
                 if(response.status === 200){
@@ -61,6 +66,7 @@ class SignupOnBoard extends Component {
             })
             .then(data => {
                 console.log(data)
+                this.setState({performRedirect: true})
             })
         }
     }
@@ -81,6 +87,11 @@ class SignupOnBoard extends Component {
     render(){
         return(
             <div>
+            {this.state.performRedirect && 
+            <Redirect to='/login' />}
+
+
+            {this.state.isVerified && 
             <div className='login-grid-container'>
                 <div className='login-grid-item1'>
                     <h1 style={{fontSize:'4.2rem'}}>GETTING <br /> YOU ONBOARD</h1>
@@ -102,12 +113,15 @@ class SignupOnBoard extends Component {
                             <input style={{fontSize: '1rem', marginBottom: '1em'}} onChange={this.handleImageChange} type='file' accept="image/png, image/jpeg" required />
                             <div className='btn-outline'><button onClick={this.handleClick} className='login-btn'>CREATE ACCOUNT</button></div>
 
-                            <p>{this.state.token}</p>
                         </form>
                         <h2><a href='/login'>LOGIN </a>HERE</h2>
                     </div>
                 </div>
-            </div>
+            </div>}
+
+
+            {!this.state.isVerified && 
+            <h1>Unauthorised Access!!</h1>}
             </div>
         )
     }
