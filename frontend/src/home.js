@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './home.css'
+import { Redirect } from 'react-router-dom';
 
 class Home extends Component {
 
@@ -9,11 +10,24 @@ class Home extends Component {
         this.state = {
             query: '',
             branch: 'all',
-            tag: 'all'
+            tag: 'all',
+            isLoggedIn: true
         }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    componentDidMount() {
+        if(typeof window == 'undefined') {
+            this.setState({isLoggedIn: false})
+        }
+        if(localStorage.getItem('jwt')) {
+            this.setState({isLoggedIn: true})
+        }
+        else{
+            this.setState({isLoggedIn: false})
+        }
     }
 
     handleChange = name => event => {
@@ -39,6 +53,8 @@ class Home extends Component {
     render(){
         return(
             <div className='home-grid-container'>
+                {!this.state.isLoggedIn && 
+                <Redirect to='/login' />}
                 <div className='home-grid-item' style={{justifyContent: 'flex-end'}}>
                     <div className='pal-search-form'>
                         <form className='search-form'>

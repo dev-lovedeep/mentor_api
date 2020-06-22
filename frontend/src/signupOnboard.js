@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import {API} from './backend'
-import {createAcc} from './apicalls'
 
 class SignupOnBoard extends Component {
 
     constructor(props){
         super(props)
         this.state = {
+            token: '',
+            regno: '',
             password1: '',
             password2: '',
             mobile: '',
             branch: '',
+            photo: null,
             error: '',
             isVerified: true   //displaying error on fake user
         }
@@ -26,7 +28,7 @@ class SignupOnBoard extends Component {
         })
         .then(data => {
             console.log(data)
-            this.setState({mobile: data.student.mob, branch: data.student.branch})
+            this.setState({mobile: data.student.mob, branch: data.student.branch, regno: data.student.user, token: data.token})
         })
     }
 
@@ -35,7 +37,31 @@ class SignupOnBoard extends Component {
         if(this.state.password1 !== this.state.password2){
             this.setState({error: "Passwords Don't Match!!"})
         }else{
-            createAcc([this.state.mobile, this.state.password1, this.state.password2,])
+            console.log(this.state)
+            let form_data = new FormData();
+            form_data.append('profile_pic', this.state.photo, this.state.photo.name);
+
+            fetch(`${API}/onboard`, form_data, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Token ${this.state.token}`,
+                    'mob': this.state.mobile,
+                    'password': this.state.password1,
+                    'password2': this.state.password2,
+                    'regno': this.state.regno
+                }
+            })
+            .then(response => {
+                if(response.status === 200){
+                return response.json()
+                }else{
+                    console.log(response)
+                }
+            })
+            .then(data => {
+                console.log(data)
+            })
         }
     }
 
@@ -44,6 +70,12 @@ class SignupOnBoard extends Component {
         this.setState({
             [name]: event.target.value
         })
+    }
+
+    handleImageChange = (e) =>{
+        this.setState({
+            photo: e.target.files[0]
+          })
     }
 
     render(){
@@ -60,14 +92,17 @@ class SignupOnBoard extends Component {
                     <div className='login-form'>
                         <p className='email-verify'>EMAIL VERIFIED SUCCESSFULLY</p>
                         <form>
+
                             {this.state.error}
+
                             <input className='field-input' style={{margin:'0.3em 0'}} value={this.state.password1} onChange={this.handleChange('password1')}  type='password' placeholder='Enter Password' /><br/>
                             <input className='field-input' style={{margin:'0.3em 0'}} value={this.state.password2} onChange={this.handleChange('password2')} type='password' placeholder='Confirm Password' /><br/>
                             <input className='field-input' style={{margin:'0.3em 0'}} value={this.state.mobile} onChange={this.handleChange('mobile')} type='text' placeholder='Mobile No.' /><br/>
                             <input className='field-input' style={{margin:'0.3em 0'}} value={this.state.branch} onChange={this.handleChange('branch')} type='text' placeholder='Branch' /><br/>
-                            <input style={{fontSize: '1rem', marginBottom: '1em'}} type='file' placeholder='Select Image' />
-                            <div style={{marginBottom:'2em', color:'#FF8585', fontWeight: '600'}}><input style={{width:'1.2em', height: '1.2em', position:'relative', left:'-0.5em'}} type='checkbox' name='termsNconditions' /><label for='termsNconditions'>I Have Read All Terms & Conditions</label></div>
+                            <input style={{fontSize: '1rem', marginBottom: '1em'}} onChange={this.handleImageChange} type='file' accept="image/png, image/jpeg" required />
                             <div className='btn-outline'><button onClick={this.handleClick} className='login-btn'>CREATE ACCOUNT</button></div>
+
+                            <p>{this.state.token}</p>
                         </form>
                         <h2><a href='/login'>LOGIN </a>HERE</h2>
                     </div>

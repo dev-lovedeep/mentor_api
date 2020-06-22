@@ -164,6 +164,3 @@ class api_filter_view(generics.ListAPIView):
     #     serializer_data = serializer.data # get the default serialized data 
     #     serializer_data.append({"DISCOUNT": 210})
     #     return Response(serializer_data)
-
-
-

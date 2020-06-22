@@ -10,20 +10,6 @@ export const signup = regno => {
     .catch(err => console.log(err))
 }
 
-export const createAcc = user => {
-    return fetch(`${API}/onboard`, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: user
-    })
-    .then(response => {
-        return response.json()
-    })
-}
-
 export const login = (regno, pass) => {
     const data = {username: regno, password: pass}
     return fetch(`${API}/login/` , {
@@ -35,6 +21,13 @@ export const login = (regno, pass) => {
         body: JSON.stringify(data)
     })
     .then(response => {
-        return response.json()
+        if(response.status == 200){
+            return response.json()
+        }else{
+            return ""
+        }
+    })
+    .catch(err => {
+        console.log(err)
     })
 }
