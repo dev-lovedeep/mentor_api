@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {API} from './backend'
+import Header from './header'
 import { Redirect } from 'react-router-dom';
 
 class SignupOnBoard extends Component {
@@ -7,6 +8,8 @@ class SignupOnBoard extends Component {
     constructor(props){
         super(props)
         this.state = {
+            uid: '',
+            email_token: '',
             token: '',
             regno: '',
             password1: '',
@@ -22,6 +25,7 @@ class SignupOnBoard extends Component {
 
     componentDidMount(){
         const { match: { params } } = this.props;
+        this.setState({uid: params.uid, email_token: params.token})
         fetch(`${API}/verify/${params.uid}/${params.token}`, {
             method: 'GET'
         })
@@ -49,24 +53,23 @@ class SignupOnBoard extends Component {
             form_data.append('password', this.state.password1);
             form_data.append('password2', this.state.password2);
             form_data.append('regno', this.state.regno);
+            form_data.append('uidb64', this.state.uid);
+            form_data.append('email_token', this.state.email_token);
 
             fetch(`${API}/onboard/`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Token ${this.state.token}`,
-                },
                 body: form_data
             })
             .then(response => {
                 if(response.status === 200){
+                this.setState({performRedirect: true})
                 return response.json()
                 }else{
-                    console.log(response)
+                    this.setState({error: "An Error Has Occured, Try Again!!"})
                 }
             })
             .then(data => {
                 console.log(data)
-                this.setState({performRedirect: true})
             })
         }
     }
@@ -90,6 +93,7 @@ class SignupOnBoard extends Component {
             {this.state.performRedirect && 
             <Redirect to='/login' />}
 
+            <Header role="1" />
 
             {this.state.isVerified && 
             <div className='login-grid-container'>

@@ -29,5 +29,13 @@
         "Gender": "m",
         "email": "aks@gmail.com",
         "mobile": "5555555555"
+    },
+    {
+        "Name": "Mohit Pandey",
+        "Regno": "20194204",
+        "Branch": "Computer Science & Engineering",
+        "Gender": "m",
+        "email": "mojo@gmail.com",
+        "mobile": "5555555555"
     }
 ]

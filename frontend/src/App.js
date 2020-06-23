@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './header'
 import './App.css';
 import Home from './home'
 import Login from './login'
@@ -11,7 +10,7 @@ import SignupOnBoard from './signupOnboard'
 function App() {
   return (
     <div>
-      <Header />
+      
       <BrowserRouter>
       <Switch>
         <Route path='/home' component={() => <Home />} />

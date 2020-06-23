@@ -22,9 +22,14 @@ class UserProfile(models.Model):
     mob = models.IntegerField()
     tags = models.ManyToManyField(Tags,blank = True)
     profile_pic = models.ImageField(upload_to = "profiles/",default = 'profiles/default.png')
+    name = models.CharField(max_length = 255)
 
     def __str__(self):
         return self.user.username
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.name = "{} {}".format(self.user.first_name,self.user.last_name)
+        print("saving",self.name)
+        return super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

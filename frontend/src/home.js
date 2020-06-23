@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import './home.css'
 import { Redirect } from 'react-router-dom';
+import {isAuthenticated} from './apicalls'
+import Header from './header'
+import { API } from './backend';
 
 class Home extends Component {
 
@@ -11,6 +14,8 @@ class Home extends Component {
             query: '',
             branch: 'all',
             tag: 'all',
+            name: '',
+            img_src: '',
             isLoggedIn: true
         }
 
@@ -24,6 +29,27 @@ class Home extends Component {
         }
         if(localStorage.getItem('jwt')) {
             this.setState({isLoggedIn: true})
+            isAuthenticated()
+            .then(data => {
+                console.log(data)
+                if(data.success === "true"){
+                    const token = JSON.parse(localStorage.getItem('jwt'))
+                    fetch(`${API}/detail/${data.user}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Token ${token}`
+                        }
+                    })
+                    .then(response => {
+                        return response.json()
+                    })
+                    .then(data => {
+                        console.log(data)
+                        this.setState({name: data.name, img_src: data.profile_pic})
+                        console.log(this.state)
+                    })
+                }
+            })
         }
         else{
             this.setState({isLoggedIn: false})
@@ -54,6 +80,8 @@ class Home extends Component {
 
     render(){
         return(
+            <div>
+            <Header role="3" img_url={this.state.img_src} username={this.state.name} />
             <div className='home-grid-container'>
                 {!this.state.isLoggedIn && 
                 <Redirect to='/login' />}
@@ -99,6 +127,7 @@ class Home extends Component {
                     <div className='pal-search-list'>
                     </div>
                 </div>
+            </div>
             </div>
         )
     }

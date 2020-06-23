@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {login} from './apicalls'
+import Header from './header'
 import {Redirect} from 'react-router-dom'
 
 class Login extends Component {
@@ -52,6 +53,8 @@ class Login extends Component {
     
     render() {
         return(
+            <div>
+            <Header role="2" />
             <div className='login-grid-container'>
                 {this.state.performRedirect &&
                 <Redirect to='/home' />}
@@ -76,6 +79,7 @@ class Login extends Component {
                         <h2><a href='/signup'>SIGNUP </a>HERE</h2>
                     </div>
                 </div>
+            </div>
             </div>
         )}
 }

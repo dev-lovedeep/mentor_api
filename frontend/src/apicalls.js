@@ -31,3 +31,27 @@ export const login = (regno, pass) => {
         console.log(err)
     })
 }
+
+export const isAuthenticated = () => {
+    if(typeof window == 'undefined') {
+        return false;
+    }
+    if(localStorage.getItem('jwt')) {
+        const token = JSON.parse(localStorage.getItem('jwt'))
+        return fetch(`${API}/cookie/`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        })
+        .then(response => {
+            if(response.status === 200){
+                return response.json()
+            }
+            else{
+                return {'success': 'false'}
+            }
+        })
+        .catch(err => console.log(err))
+    }
+}
