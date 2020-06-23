@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import './home.css'
+import Card from './card'
 import { Redirect } from 'react-router-dom';
 import {isAuthenticated} from './apicalls'
 import Header from './header'
 import { API } from './backend';
+
+const token = JSON.parse(localStorage.getItem('jwt'))
 
 class Home extends Component {
 
@@ -16,7 +19,8 @@ class Home extends Component {
             tag: 'all',
             name: '',
             img_src: '',
-            isLoggedIn: true
+            isLoggedIn: true,
+            search: null
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -31,9 +35,13 @@ class Home extends Component {
             this.setState({isLoggedIn: true})
             isAuthenticated()
             .then(data => {
-                console.log(data)
-                if(data.success === "true"){
-                    const token = JSON.parse(localStorage.getItem('jwt'))
+                if(data.success === "false"){
+                    if(typeof window !== 'undefined') {
+                        localStorage.removeItem('jwt')
+                        this.setState({isLoggedIn: false})
+                    }
+                }
+                else if(data.success === "true"){
                     fetch(`${API}/detail/${data.user}`, {
                         method: 'GET',
                         headers: {
@@ -44,9 +52,7 @@ class Home extends Component {
                         return response.json()
                     })
                     .then(data => {
-                        console.log(data)
                         this.setState({name: data.name, img_src: data.profile_pic})
-                        console.log(this.state)
                     })
                 }
             })
@@ -55,7 +61,6 @@ class Home extends Component {
             this.setState({isLoggedIn: false})
         }
 
-        
     }
 
     handleChange = name => event => {
@@ -66,15 +71,21 @@ class Home extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        fetch(`localhost:8000/?query=${this.state.query}&branch=${this.state.branch}&tag=${this.state.tag}`, {
+        
+        fetch(`${API}/filter/?query=${this.state.query}&branch=${this.state.branch}&tag=${this.state.tag}`, {
             method: 'GET',
             headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
+                'Authorization': `Token ${token}`
+            }
+        })
+        .then(response => {
+            if(response.status === 200){
+                return response.json()
             }
         })
         .then(data => {
-            console.log(data)
+            this.setState({search: data})
+            console.log(this.state.search)
         })
     }
 
@@ -125,6 +136,17 @@ class Home extends Component {
                 </div>
                 <div className='home-grid-item'>
                     <div className='pal-search-list'>
+                        {this.state.search &&
+                        this.state.search.map((student, index) => (
+                            <Card
+                            imgUrl={student.profile_pic}
+                            name={student.name} 
+                            regno={student.user}
+                            branch={student.branch}
+                            mobile={student.mob}
+                            />
+                        ))
+                        }
                     </div>
                 </div>
             </div>

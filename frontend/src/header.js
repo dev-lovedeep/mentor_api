@@ -16,7 +16,7 @@ function Header(props)  {
                     <p><a href='/signup' style={{color: '#fff'}}>SIGNUP</a></p>}
 
                     {props.role === "3" &&
-                    <p><img src={props.img_url} alt='UserImg' />{props.username}</p>}
+                    <p><img src={props.img_url} style={{height: '3.5rem', width: '3.5rem'}} alt='UserImg' />{props.username}</p>}
                 </span>
             </div>
         )

@@ -17,13 +17,6 @@
     margin: 5em 0.8em 1em 0;
 }
 
-.pal-search-list{
-    box-shadow: -5px -5px 15px #FFFFFFCB, 5px 5px 15px #ccc;
-    border-radius: 1em;
-    width: 90%;
-    margin:  5em 0em 1em 0.8em;
-}
-
 .search-form{
     width: 60%;
     margin: 6.8em 0
@@ -46,4 +39,31 @@
     font-weight: 500;
     font-size: 1.2rem;
     width: 109%;
+}
+.pal-search-list{
+    width: 100%;
+    display: flex;
+    margin-top: 5em;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.grid-container-card{
+    width: 85%;
+    margin-left: 1em;
+    display: grid;
+    grid-template-columns: 15% 85%;
+    padding: 1em 0.5em 1em 0.5em;
+    box-shadow: -5px -5px 10px #FFFFFFCB, 5px 5px 15px #ccc;
+    border-radius: 1em;
+    margin-bottom: 1.5em;
+}
+
+.card-img img{
+    border-radius: 100%;
+    width: 95%;
+}
+
+.card-details p{
+    margin-bottom: 0.5em;
 }
